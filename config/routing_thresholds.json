@@ -1,0 +1,7 @@
+{
+  "minCategoryConfidence": 0.7,
+  "minSubcategoryConfidence": 0.6,
+  "fallbackLabel": "Review",
+  "archiveRequiresConfidenceAbove": 0.85,
+  "defaultArchive": false
+}

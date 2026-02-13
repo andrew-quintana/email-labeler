@@ -1,0 +1,28 @@
+# macOS
+.DS_Store
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Env / secrets
+.env
+.env.local
+
+# private overrides (fork-specific config/prompts; never commit)
+private/
+
+# Trigger.dev local state
+.trigger/
+
+# Generated artifacts
+confidence-histogram.html

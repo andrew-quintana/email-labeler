@@ -1,0 +1,12 @@
+{
+  "rules": [
+    { "id": "newsletters-tech", "match": { "category": "newsletters", "subcategory": "tech" }, "actions": ["addLabel", "archive"], "archive": true },
+    { "id": "newsletters-news", "match": { "category": "newsletters", "subcategory": "news" }, "actions": ["addLabel", "archive"], "archive": true },
+    { "id": "newsletters-industry", "match": { "category": "newsletters", "subcategory": "industry" }, "actions": ["addLabel", "archive"], "archive": true },
+    { "id": "notifications-social-media", "match": { "category": "notifications", "subcategory": "social-media" }, "actions": ["addLabel", "archive"], "archive": true },
+    { "id": "notifications-app-updates", "match": { "category": "notifications", "subcategory": "app-updates" }, "actions": ["addLabel", "archive"], "archive": true },
+    { "id": "shopping-deals", "match": { "category": "shopping", "subcategory": "deals" }, "actions": ["addLabel", "archive"], "archive": true },
+    { "id": "shopping-shipping", "match": { "category": "shopping", "subcategory": "shipping" }, "actions": ["addLabel", "archive"], "archive": true },
+    { "id": "fallback", "match": { "category": "other", "subcategory": "other" }, "actions": ["addLabel"], "archive": false, "labelOverride": "Review" }
+  ]
+}

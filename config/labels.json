@@ -1,0 +1,31 @@
+{
+  "_comment": "Flat label list (single source of truth for label router). Order is stable and used as output indices for the NN head. Labels can use emojis (💼-work-projects) or plain format (work-projects) — controlled by CATEGORY_EMOJI in src/config/labelFormat.ts. Run the setup prompt (SETUP_PROMPT.md) to regenerate from your taxonomy.",
+  "labels": [
+    "Review",
+    "other",
+    "💼-work-projects",
+    "💼-work-meetings",
+    "💼-work-deadlines",
+    "💼-work-collaboration",
+    "👤-personal-family",
+    "👤-personal-friends",
+    "👤-personal-events",
+    "👤-personal-travel",
+    "👤-personal-health",
+    "💰-finance-banking",
+    "💰-finance-bills",
+    "💰-finance-income",
+    "💰-finance-subscriptions",
+    "💰-finance-investments",
+    "🛒-shopping-orders",
+    "🛒-shopping-shipping",
+    "🛒-shopping-deals",
+    "🛒-shopping-returns",
+    "🔔-notifications-account-alerts",
+    "🔔-notifications-social-media",
+    "🔔-notifications-app-updates",
+    "📰-newsletters-tech",
+    "📰-newsletters-news",
+    "📰-newsletters-industry"
+  ]
+}

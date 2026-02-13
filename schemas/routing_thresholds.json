@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["minCategoryConfidence", "minSubcategoryConfidence", "fallbackLabel", "archiveRequiresConfidenceAbove"],
+  "properties": {
+    "minCategoryConfidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "minSubcategoryConfidence": { "type": "number", "minimum": 0, "maximum": 1 },
+    "fallbackLabel": { "type": "string" },
+    "archiveRequiresConfidenceAbove": { "type": "number", "minimum": 0, "maximum": 1 },
+    "defaultArchive": { "type": "boolean" },
+    "multiLabelRatioOfMax": { "type": "number", "minimum": 0, "maximum": 1, "description": "Include extra labels with score >= this ratio of max score (0 = single label only)." },
+    "multiLabelMinScore": { "type": "number", "minimum": 0, "maximum": 100, "description": "Include extra labels only if final score >= this (router scale 0-100)." }
+  }
+}

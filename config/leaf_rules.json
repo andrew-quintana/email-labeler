@@ -1,0 +1,155 @@
+{
+  "_comment": "Maps each label to Gmail label IDs. The labelIds arrays are PLACEHOLDERS — run the setup prompt (SETUP_PROMPT.md) or manually replace with your actual Gmail label IDs after creating labels in Gmail. Use 'pnpm run test:label -- --list-labels' to see your Gmail label IDs.",
+  "leaf_rules": [
+    {
+      "id": "work-projects", "name": "💼-work-projects",
+      "match": { "category": "work", "subcategory": "projects" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["💼-work-projects"], "archive": false
+    },
+    {
+      "id": "work-meetings", "name": "💼-work-meetings",
+      "match": { "category": "work", "subcategory": "meetings" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["💼-work-meetings"], "archive": false
+    },
+    {
+      "id": "work-deadlines", "name": "💼-work-deadlines",
+      "match": { "category": "work", "subcategory": "deadlines" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["💼-work-deadlines"], "archive": false
+    },
+    {
+      "id": "work-collaboration", "name": "💼-work-collaboration",
+      "match": { "category": "work", "subcategory": "collaboration" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["💼-work-collaboration"], "archive": false
+    },
+    {
+      "id": "personal-family", "name": "👤-personal-family",
+      "match": { "category": "personal", "subcategory": "family" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["👤-personal-family"], "archive": false
+    },
+    {
+      "id": "personal-friends", "name": "👤-personal-friends",
+      "match": { "category": "personal", "subcategory": "friends" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["👤-personal-friends"], "archive": false
+    },
+    {
+      "id": "personal-events", "name": "👤-personal-events",
+      "match": { "category": "personal", "subcategory": "events" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["👤-personal-events"], "archive": false
+    },
+    {
+      "id": "personal-travel", "name": "👤-personal-travel",
+      "match": { "category": "personal", "subcategory": "travel" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["👤-personal-travel"], "archive": false
+    },
+    {
+      "id": "personal-health", "name": "👤-personal-health",
+      "match": { "category": "personal", "subcategory": "health" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["👤-personal-health"], "archive": false
+    },
+    {
+      "id": "finance-banking", "name": "💰-finance-banking",
+      "match": { "category": "finance", "subcategory": "banking" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["💰-finance-banking"], "archive": false
+    },
+    {
+      "id": "finance-bills", "name": "💰-finance-bills",
+      "match": { "category": "finance", "subcategory": "bills" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["💰-finance-bills"], "archive": false
+    },
+    {
+      "id": "finance-income", "name": "💰-finance-income",
+      "match": { "category": "finance", "subcategory": "income" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["💰-finance-income"], "archive": false
+    },
+    {
+      "id": "finance-subscriptions", "name": "💰-finance-subscriptions",
+      "match": { "category": "finance", "subcategory": "subscriptions" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["💰-finance-subscriptions"], "archive": false
+    },
+    {
+      "id": "finance-investments", "name": "💰-finance-investments",
+      "match": { "category": "finance", "subcategory": "investments" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["💰-finance-investments"], "archive": false
+    },
+    {
+      "id": "shopping-orders", "name": "🛒-shopping-orders",
+      "match": { "category": "shopping", "subcategory": "orders" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["🛒-shopping-orders"], "archive": false
+    },
+    {
+      "id": "shopping-shipping", "name": "🛒-shopping-shipping",
+      "match": { "category": "shopping", "subcategory": "shipping" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["🛒-shopping-shipping"], "archive": true
+    },
+    {
+      "id": "shopping-deals", "name": "🛒-shopping-deals",
+      "match": { "category": "shopping", "subcategory": "deals" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["🛒-shopping-deals"], "archive": true
+    },
+    {
+      "id": "shopping-returns", "name": "🛒-shopping-returns",
+      "match": { "category": "shopping", "subcategory": "returns" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["🛒-shopping-returns"], "archive": false
+    },
+    {
+      "id": "notifications-account-alerts", "name": "🔔-notifications-account-alerts",
+      "match": { "category": "notifications", "subcategory": "account-alerts" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["🔔-notifications-account-alerts"], "archive": false
+    },
+    {
+      "id": "notifications-social-media", "name": "🔔-notifications-social-media",
+      "match": { "category": "notifications", "subcategory": "social-media" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["🔔-notifications-social-media"], "archive": true
+    },
+    {
+      "id": "notifications-app-updates", "name": "🔔-notifications-app-updates",
+      "match": { "category": "notifications", "subcategory": "app-updates" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["🔔-notifications-app-updates"], "archive": true
+    },
+    {
+      "id": "newsletters-tech", "name": "📰-newsletters-tech",
+      "match": { "category": "newsletters", "subcategory": "tech" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["📰-newsletters-tech"], "archive": true
+    },
+    {
+      "id": "newsletters-news", "name": "📰-newsletters-news",
+      "match": { "category": "newsletters", "subcategory": "news" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["📰-newsletters-news"], "archive": true
+    },
+    {
+      "id": "newsletters-industry", "name": "📰-newsletters-industry",
+      "match": { "category": "newsletters", "subcategory": "industry" },
+      "actions": [{ "type": "addLabels", "labelIds": ["REPLACE_WITH_GMAIL_LABEL_ID"] }],
+      "labels": ["📰-newsletters-industry"], "archive": true
+    },
+    {
+      "id": "other", "name": "other",
+      "match": { "category": "other", "subcategory": "other" },
+      "actions": [{ "type": "addLabels", "labelIds": [] }],
+      "labels": ["other"], "archive": false
+    }
+  ]
+}

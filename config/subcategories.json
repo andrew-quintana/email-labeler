@@ -1,0 +1,9 @@
+{
+  "work": ["projects", "meetings", "deadlines", "collaboration"],
+  "personal": ["family", "friends", "events", "travel", "health"],
+  "finance": ["banking", "bills", "income", "subscriptions", "investments"],
+  "shopping": ["orders", "shipping", "deals", "returns"],
+  "notifications": ["account-alerts", "social-media", "app-updates"],
+  "newsletters": ["tech", "news", "industry"],
+  "other": ["other"]
+}

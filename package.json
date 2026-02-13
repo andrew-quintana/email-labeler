@@ -1,0 +1,56 @@
+{
+  "name": "email-labeler",
+  "version": "1.0.0",
+  "description": "Gmail email-labeling worker on Trigger.dev with LLM classification and RL feedback",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "trigger dev",
+    "deploy": "npx trigger.dev@4.3.3 deploy",
+    "build": "node scripts/embed-config.mjs && tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit && eslint src --ext .ts",
+    "init:private": "node scripts/init-private.mjs",
+    "setup:gcp-gmail": "./scripts/setup-gcp-gmail.sh",
+    "setup:gmail": "./scripts/setup-gmail-env.sh",
+    "setup:gmail-refresh-token": "./scripts/setup-gmail-refresh-token.sh",
+    "get-refresh-token": "node scripts/get-gmail-refresh-token.mjs",
+    "verify:config": "node scripts/verify-config.mjs",
+    "test:label": "node -r dotenv/config scripts/test-label-one.mjs"
+  },
+  "keywords": [
+    "gmail",
+    "trigger.dev",
+    "email",
+    "labeling",
+    "llm",
+    "classification"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.0",
+    "@google/generative-ai": "^0.21.0",
+    "@langchain/core": "^0.3.80",
+    "@langchain/langgraph": "^0.2.74",
+    "@supabase/supabase-js": "^2.95.3",
+    "@trigger.dev/python": "4.3.3",
+    "@trigger.dev/sdk": "4.3.3",
+    "ajv": "^8.17.0",
+    "cheerio": "^1.0.0",
+    "googleapis": "^144.0.0",
+    "trigger.dev": "^3.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@trigger.dev/build": "4.3.3",
+    "@types/node": "^22.0.0",
+    "dotenv": "^16.4.0",
+    "pg": "^8.18.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

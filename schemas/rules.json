@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["rules"],
+  "properties": {
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "match", "actions"],
+        "properties": {
+          "id": { "type": "string" },
+          "match": { "type": "object" },
+          "actions": { "type": "array", "items": { "type": "string" } },
+          "archive": { "type": "boolean" },
+          "labelOverride": { "type": "string" }
+        }
+      }
+    }
+  }
+}

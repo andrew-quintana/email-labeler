@@ -1,0 +1,5 @@
+[
+  { "type": "addLabels", "labelName": "<category>/<subcategory>", "description": "Apply category/subcategory label" },
+  { "type": "archive", "description": "Remove from INBOX" },
+  { "type": "markRead", "description": "Mark as read" }
+]

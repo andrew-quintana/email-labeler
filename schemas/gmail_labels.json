@@ -1,0 +1,1 @@
+{"$schema":"http://json-schema.org/draft-07/schema#","type":"object","required":["labelPrefix","needsReviewLabel"],"properties":{"labelPrefix":{"type":"string"},"processedLabel":{"type":"string"},"needsReviewLabel":{"type":"string"},"labelNaming":{"type":"string"}}}

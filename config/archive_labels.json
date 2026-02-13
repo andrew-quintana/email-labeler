@@ -1,0 +1,32 @@
+{
+  "_comment": "Labels that trigger archive (remove from INBOX). Edit the 'labels' array; names must match resolved label names (emoji-category-subcategory). _non_archiving_labels lists all other labels that should stay in inbox.",
+  "labels": [
+    "🛒-shopping-deals",
+    "🛒-shopping-shipping",
+    "🔔-notifications-social-media",
+    "🔔-notifications-app-updates",
+    "📰-newsletters-tech",
+    "📰-newsletters-news",
+    "📰-newsletters-industry"
+  ],
+  "_non_archiving_labels": [
+    "other",
+    "💼-work-projects",
+    "💼-work-meetings",
+    "💼-work-deadlines",
+    "💼-work-collaboration",
+    "👤-personal-family",
+    "👤-personal-friends",
+    "👤-personal-events",
+    "👤-personal-travel",
+    "👤-personal-health",
+    "💰-finance-banking",
+    "💰-finance-bills",
+    "💰-finance-income",
+    "💰-finance-subscriptions",
+    "💰-finance-investments",
+    "🛒-shopping-orders",
+    "🛒-shopping-returns",
+    "🔔-notifications-account-alerts"
+  ]
+}
