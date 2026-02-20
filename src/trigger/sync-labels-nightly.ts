@@ -1,12 +1,22 @@
 import { schedules, logger } from "@trigger.dev/sdk/v3";
-import { getGmailClient, getMessageLabelIds } from "../gmail/client.js";
+import { getGmailClient, getMessageLabelIds, isInvalidGrantError, INVALID_GRANT_MESSAGE } from "../gmail/client.js";
 import {
-  getProcessedEmailsForDay,
+  getUnsyncedProcessedEmails,
   updateLabelsForMessage,
   IMPORTANT_LABEL_ID,
 } from "../db/important-update.js";
 
 const GMAIL_USER = process.env.GMAIL_USER_ID ?? "me";
+
+/** Process unsynced emails in batches of this size. */
+const BATCH_SIZE = 50;
+
+/** Delay between Gmail API calls (ms) to avoid rate limits. */
+const API_DELAY_MS = 100;
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function getGmailOptions() {
   const clientId = process.env.GMAIL_CLIENT_ID;
@@ -21,65 +31,83 @@ function getGmailOptions() {
 }
 
 /**
- * Nightly task: query all processed_emails from that day, fetch current Gmail labels
- * for each message, and update important, important_updated, label_ids_current, labels_synced_at.
- * Captures all labels so both the important classifier and the (future) label router
- * can learn from user corrections (e.g. mislabeled emails). Run once per day before training.
+ * Sync task: query ALL processed_emails where labels_synced_at IS NULL,
+ * fetch current Gmail labels for each message, and update important,
+ * important_updated, label_ids_current, labels_synced_at.
+ *
+ * Processes the full backlog in batches until no more unsynced rows remain.
+ * Captures all labels so both the important classifier and the label router
+ * can learn from user corrections. Run weekly before training tasks.
  */
 export const syncLabelsNightlyTask = schedules.task({
   id: "sync-labels-nightly",
   machine: "small-1x",
+  maxDuration: 300,
   run: async (_payload: Record<string, unknown>) => {
     if (!process.env.SUPABASE_URL) {
       logger.info("SUPABASE_URL not set; skipping sync-labels-nightly");
       return { updated: 0, skipped: true, reason: "no_supabase" };
     }
 
-    const now = new Date();
-    const startOfDay = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
-    const endOfDay = new Date(startOfDay);
-    endOfDay.setUTCDate(endOfDay.getUTCDate() + 1);
-
-    const startOfDayISO = startOfDay.toISOString();
-    const endOfDayISO = endOfDay.toISOString();
-
-    const rows = await getProcessedEmailsForDay(startOfDayISO, endOfDayISO);
-    if (rows.length === 0) {
-      return { updated: 0, processedToday: 0 };
-    }
-
     const options = getGmailOptions();
     const gmail = getGmailClient(options);
 
-    let updated = 0;
-    let errors = 0;
+    let totalUpdated = 0;
+    let totalErrors = 0;
+    let totalProcessed = 0;
 
-    for (const row of rows) {
-      try {
-        const labelIdsCurrent = await getMessageLabelIds(gmail, GMAIL_USER, row.message_id);
-        const currentImportant = labelIdsCurrent.includes(IMPORTANT_LABEL_ID);
-        await updateLabelsForMessage(
-          row.message_id,
-          currentImportant,
-          row.important,
-          labelIdsCurrent
-        );
-        updated += 1;
-      } catch (err) {
-        errors += 1;
-        logger.warn("Failed to sync labels for message", {
-          messageId: row.message_id,
-          error: err instanceof Error ? err.message : String(err),
+    try {
+      // Process in batches until no more unsynced rows
+      while (true) {
+        const rows = await getUnsyncedProcessedEmails(BATCH_SIZE);
+        if (rows.length === 0) break;
+
+        totalProcessed += rows.length;
+        logger.info("sync-labels-nightly: processing batch", {
+          batchSize: rows.length,
+          totalProcessedSoFar: totalProcessed,
         });
+
+        for (const row of rows) {
+          try {
+            const labelIdsCurrent = await getMessageLabelIds(gmail, GMAIL_USER, row.message_id);
+            const currentImportant = labelIdsCurrent.includes(IMPORTANT_LABEL_ID);
+            await updateLabelsForMessage(
+              row.message_id,
+              currentImportant,
+              row.important,
+              labelIdsCurrent
+            );
+            totalUpdated += 1;
+          } catch (err) {
+            if (isInvalidGrantError(err)) throw err;
+            totalErrors += 1;
+            logger.warn("Failed to sync labels for message", {
+              messageId: row.message_id,
+              error: err instanceof Error ? err.message : String(err),
+            });
+          }
+          // Rate limit Gmail API calls
+          await sleep(API_DELAY_MS);
+        }
       }
+    } catch (err) {
+      if (isInvalidGrantError(err)) {
+        throw new Error(INVALID_GRANT_MESSAGE);
+      }
+      throw err;
     }
 
+    logger.info("sync-labels-nightly complete", {
+      totalUpdated,
+      totalErrors,
+      totalProcessed,
+    });
+
     return {
-      updated,
-      errors,
-      processedToday: rows.length,
-      startOfDay: startOfDayISO,
-      endOfDay: endOfDayISO,
+      updated: totalUpdated,
+      errors: totalErrors,
+      totalProcessed,
     };
   },
 });

@@ -3,6 +3,8 @@ import {
   getGmailClient,
   listMessageIdsWithoutUserLabels,
   getMessageLabelIds,
+  isInvalidGrantError,
+  INVALID_GRANT_MESSAGE,
 } from "../gmail/client.js";
 import {
   getProcessedEmailsWithNullLabelsSynced,
@@ -67,48 +69,56 @@ export const pollAndLabelTask = schedules.task({
     let synced = 0;
     let skippedUnmodified = 0;
 
-    if (process.env.SUPABASE_URL) {
-      const nullSyncedRows = await getProcessedEmailsWithNullLabelsSynced(POLL_BATCH_SIZE);
-      for (const row of nullSyncedRows) {
-        try {
-          const labelIdsCurrent = await getMessageLabelIds(gmail, GMAIL_USER, row.message_id);
-          if (!userModifiedEmail(labelIdsCurrent, row.label_ids, row.archive_applied)) {
-            skippedUnmodified += 1;
-            continue;
+    try {
+      if (process.env.SUPABASE_URL) {
+        const nullSyncedRows = await getProcessedEmailsWithNullLabelsSynced(POLL_BATCH_SIZE);
+        for (const row of nullSyncedRows) {
+          try {
+            const labelIdsCurrent = await getMessageLabelIds(gmail, GMAIL_USER, row.message_id);
+            if (!userModifiedEmail(labelIdsCurrent, row.label_ids, row.archive_applied)) {
+              skippedUnmodified += 1;
+              continue;
+            }
+            const currentImportant = labelIdsCurrent.includes(IMPORTANT_LABEL_ID);
+            await updateLabelsForMessage(
+              row.message_id,
+              currentImportant,
+              row.important,
+              labelIdsCurrent
+            );
+            synced += 1;
+          } catch (_err) {
+            if (isInvalidGrantError(_err)) throw _err;
+            // skip failed message; next run will retry (labels_synced_at stays null)
           }
-          const currentImportant = labelIdsCurrent.includes(IMPORTANT_LABEL_ID);
-          await updateLabelsForMessage(
-            row.message_id,
-            currentImportant,
-            row.important,
-            labelIdsCurrent
-          );
-          synced += 1;
-        } catch (_err) {
-          // skip failed message; next run will retry (labels_synced_at stays null)
         }
       }
+
+      /** All mail except spam, trash, and sent; then filter to messages with only system labels. */
+      const messageIds = await listMessageIdsWithoutUserLabels(
+        gmail,
+        GMAIL_USER,
+        POLL_BATCH_SIZE,
+        "-in:spam -in:trash -in:sent"
+      );
+
+      for (const messageId of messageIds) {
+        await tasks.trigger<typeof labelOneMessageTask>("label-one-message", {
+          messageId,
+        });
+      }
+
+      return {
+        synced,
+        skippedUnmodified,
+        triggered: messageIds.length,
+        messageIds,
+      };
+    } catch (err) {
+      if (isInvalidGrantError(err)) {
+        throw new Error(INVALID_GRANT_MESSAGE);
+      }
+      throw err;
     }
-
-    /** All mail except spam, trash, and sent; then filter to messages with only system labels. */
-    const messageIds = await listMessageIdsWithoutUserLabels(
-      gmail,
-      GMAIL_USER,
-      POLL_BATCH_SIZE,
-      "-in:spam -in:trash -in:sent"
-    );
-
-    for (const messageId of messageIds) {
-      await tasks.trigger<typeof labelOneMessageTask>("label-one-message", {
-        messageId,
-      });
-    }
-
-    return {
-      synced,
-      skippedUnmodified,
-      triggered: messageIds.length,
-      messageIds,
-    };
   },
 });

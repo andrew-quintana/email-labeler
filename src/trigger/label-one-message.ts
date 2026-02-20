@@ -5,6 +5,8 @@ import {
   ensureLabelExists,
   modifyMessageLabels,
   getInboxLabelId,
+  isInvalidGrantError,
+  INVALID_GRANT_MESSAGE,
 } from "../gmail/client.js";
 import { parseEmail } from "../email/parse.js";
 import { runEmailLabelingGraph } from "../orchestration/graph.js";
@@ -38,6 +40,7 @@ function getGmailOptions() {
 }
 
 function isTransientError(err: unknown): boolean {
+  if (isInvalidGrantError(err)) return false;
   if (err && typeof err === "object") {
     const status = (err as { response?: { status?: number } }).response?.status;
     if (status === 429) return true;
@@ -116,10 +119,10 @@ export const labelOneMessageTask = task({
           });
         }
 
-        // --- Important classifier inference ---
+        // --- Important classifier inference (skip if pipeline errored) ---
         let modelImportant: boolean | null = null;
         const summaryText = state.summary?.summary ?? "";
-        if (summaryText) {
+        if (summaryText && !state.error) {
           try {
             const inferResult = await inferImportant(summaryText);
             if (inferResult) {
@@ -211,6 +214,10 @@ export const labelOneMessageTask = task({
 
         return { ok: true, messageId, label: labelName, archive, labels };
       } catch (err) {
+        if (isInvalidGrantError(err)) {
+          logger.error("label-one-message: " + INVALID_GRANT_MESSAGE, { messageId, runId });
+          return { ok: false, messageId, error: INVALID_GRANT_MESSAGE, errorType: "permanent" };
+        }
         lastErr = err;
         const errorType = isTransientError(err) ? "transient" : "permanent";
         logger.warn("label-one-message attempt failed", {

@@ -87,7 +87,15 @@ After this, the scheduled task and label-one-message runs use the Gmail account 
 - Add your Gmail as a **Test user**: [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent) → **Test users** → **+ ADD USERS** → your address → **Save**.
 - When signing in, Google may show an “app isn’t verified” warning; click **Continue** (or **Advanced** → **Go to [app name]**) to proceed.
 
-**“This app doesn’t comply with Google’s OAuth 2.0 policy … register the redirect URI”**
+**`Error: invalid_grant` when running poll-and-label or label-one-message**
+
+- The refresh token has expired or been revoked. This happens when:
+  1. **Your GCP OAuth app is in "Testing" mode** — Google expires refresh tokens after **7 days**. Either re-generate the token every week, or **publish the app**: GCP Console → APIs & Services → OAuth consent screen → **PUBLISH APP** (safe for personal use; no verification needed for <100 users).
+  2. The user changed their Google account password or revoked access at [myaccount.google.com/permissions](https://myaccount.google.com/permissions).
+  3. Too many refresh tokens were issued for this client (Google limits ~50 per account).
+- **Fix:** run `pnpm run get-refresh-token`, copy the new token, and update `GMAIL_REFRESH_TOKEN` in `.env` and in Trigger.dev environment variables.
+
+**"This app doesn't comply with Google's OAuth 2.0 policy … register the redirect URI"**
 
 - The redirect URI used by the script is **exactly** `http://127.0.0.1:9999/callback` (no `https`, no `localhost`, no trailing slash).
 - In [Google Cloud Console](https://console.cloud.google.com/apis/credentials): open your project → **Credentials** → click your **OAuth 2.0 Client ID** (Web application).

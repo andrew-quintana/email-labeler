@@ -4,7 +4,7 @@ import { pythonExtension } from "@trigger.dev/python/extension";
 
 export default defineConfig({
   // CUSTOMIZE: Replace with your Trigger.dev project ID from dashboard
-  project: "proj_YOUR_PROJECT_ID",
+  project: "proj_ofsjfzmzcncnwfnvhihi",
   dirs: ["./src/trigger"],
   maxDuration: 60,
   legacyDevProcessCwdBehaviour: false,

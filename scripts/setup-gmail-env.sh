@@ -20,6 +20,10 @@ if [[ ! -f "$ENV_FILE" ]]; then
     touch "$ENV_FILE"
     echo "Created empty .env"
   fi
+else
+  # Back up existing .env before modifying
+  cp "$ENV_FILE" "$ENV_FILE.bak"
+  echo "Backed up existing .env to .env.bak"
 fi
 
 # Portable: set or replace a key=value line in .env

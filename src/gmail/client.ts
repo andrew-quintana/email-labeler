@@ -16,13 +16,27 @@ function getOAuth2Client(options: GmailClientOptions) {
     const oauth2 = new google.auth.OAuth2(
       options.clientId,
       options.clientSecret,
-      "https://developers.google.com/oauthplayground"
+      "http://127.0.0.1:9999/callback"
     );
     oauth2.setCredentials({ refresh_token: options.refreshToken });
     cachedOAuth2Client = oauth2;
   }
   return cachedOAuth2Client;
 }
+
+/** Check if an error is an invalid_grant OAuth error (expired or revoked refresh token). */
+export function isInvalidGrantError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  return /invalid_grant/i.test(err.message);
+}
+
+/** Human-readable message for invalid_grant errors. */
+export const INVALID_GRANT_MESSAGE =
+  "Gmail refresh token is expired or revoked (invalid_grant). " +
+  "Re-generate it: pnpm run get-refresh-token — then update GMAIL_REFRESH_TOKEN " +
+  "in .env and Trigger.dev environment variables. " +
+  "If your GCP OAuth app is in 'Testing' mode, tokens expire every 7 days; " +
+  "publish the app to avoid this: GCP Console → APIs & Services → OAuth consent screen → PUBLISH APP.";
 
 export function getGmailClient(options: GmailClientOptions): gmail_v1.Gmail {
   if (!cachedGmail) {

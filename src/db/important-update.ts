@@ -60,6 +60,29 @@ export async function getProcessedEmailsForDay(
 }
 
 /**
+ * Get ALL processed_emails rows where labels_synced_at is null (never synced).
+ * Ordered by processed_at ASC so oldest emails are synced first.
+ * Used by sync-labels-nightly to process the full backlog.
+ */
+export async function getUnsyncedProcessedEmails(
+  limit: number
+): Promise<ProcessedEmailForUpdate[]> {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from("processed_emails")
+    .select("message_id, important")
+    .is("labels_synced_at", null)
+    .order("processed_at", { ascending: true })
+    .limit(limit);
+
+  if (error) throw new Error(`Failed to get unsynced processed_emails: ${error.message}`);
+  return (data ?? []).map((row) => ({
+    message_id: row.message_id,
+    important: row.important as boolean | null,
+  }));
+}
+
+/**
  * Update important, important_updated, and current label set for a message.
  * important_updated = true when the new important value differs from the previous stored value.
  * label_ids_current = all Gmail label IDs at sync time (for label-router and important feedback).
